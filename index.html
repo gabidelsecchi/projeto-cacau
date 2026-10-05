@@ -30,101 +30,86 @@
 
         <!-- Painel do Administrador -->
         <section id="admin-panel" class="card hidden">
-            <h2>Painel do Administrador</h2>
-            <button id="btn-logout" class="danger">Sair do Sistema</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>Painel do Administrador</h2>
+                <button id="btn-logout" class="danger" style="width: auto; padding: 0.5rem 1rem;">Sair do Sistema</button>
+            </div>
             
-            <hr style="margin: 1.5rem 0;">
+            <!-- Navbar / Abas do Admin -->
+            <nav class="admin-nav">
+                <button class="nav-btn active" onclick="alternarAbaAdmin('usuarios')">Gerenciar Usuários</button>
+                <button class="nav-btn" onclick="alternarAbaAdmin('estoque')">Estoque e Produtos</button>
+                <button class="nav-btn" onclick="alternarAbaAdmin('sacolas')">Sacolas dos Vendedores</button>
+            </nav>
 
-            <!-- Gerenciamento de Usuários -->
-            <div class="card">
-                <h3>Gerenciar Usuários (Adms e Vendedores)</h3>
-                <form id="user-form">
-                    <input type="text" id="user-nome" placeholder="Nome do Usuário" required>
-                    <input type="email" id="user-email" placeholder="E-mail" required>
-                    <input type="password" id="user-senha" placeholder="Senha temporária" required>
-                    <select id="user-tipo" required>
-                        <option value="">Selecione o Perfil</option>
-                        <option value="admin">Administrador</option>
-                        <option value="vendedor">Vendedor</option>
-                    </select>
-                    <button type="submit">Cadastrar Usuário</button>
-                </form>
-                <div id="users-list"></div>
+            <!-- Aba 1: Gerenciamento de Usuários -->
+            <div id="tab-usuarios" class="admin-tab-content">
+                <div class="card">
+                    <h3 id="user-form-title">Cadastrar Novo Usuário</h3>
+                    <form id="user-form">
+                        <input type="hidden" id="edit-user-id">
+                        <input type="text" id="user-nome" placeholder="Nome do Usuário" required>
+                        <input type="email" id="user-email" placeholder="E-mail" required>
+                        <input type="password" id="user-senha" placeholder="Senha temporária" required>
+                        <select id="user-tipo" required>
+                            <option value="">Selecione o Perfil</option>
+                            <option value="admin">Administrador</option>
+                            <option value="vendedor">Vendedor</option>
+                        </select>
+                        <button type="submit" id="btn-salvar-user">Cadastrar Usuário</button>
+                        <button type="button" id="btn-cancelar-user" class="danger hidden" onclick="cancelarEdicaoUsuario()">Cancelar Edição</button>
+                    </form>
+                    <div id="users-list"></div>
+                </div>
             </div>
 
-            <!-- Cadastro de Chocolates / Estoque -->
-            <div class="card">
-                <h3>Estoque e Produtos</h3>
-                <form id="product-form">
-                    <input type="text" id="prod-nome" placeholder="Nome do Chocolate" required>
-                    <input type="text" id="prod-categoria" placeholder="Categoria (ex: Trufas, Tabletes, Panetones)" required>
-                    <input type="number" step="0.01" id="prod-custo" placeholder="Valor de Custo (R$)" required>
-                    <input type="number" step="0.01" id="prod-venda" placeholder="Valor de Venda (R$)" required>
-                    <input type="number" id="prod-qtd" placeholder="Quantidade em Estoque Geral" required>
-                    <button type="submit">Adicionar Produto ao Estoque</button>
-                </form>
-                <div id="stock-list"></div>
+            <!-- Aba 2: Estoque e Produtos -->
+            <div id="tab-estoque" class="admin-tab-content hidden">
+                <div class="card">
+                    <h3 id="product-form-title">Adicionar Produto ao Estoque</h3>
+                    <form id="product-form">
+                        <input type="hidden" id="edit-prod-id">
+                        <input type="text" id="prod-nome" placeholder="Nome do Chocolate" required>
+                        <input type="text" id="prod-categoria" placeholder="Categoria (ex: Trufas, Tabletes, Panetones)" required>
+                        <input type="number" step="0.01" id="prod-custo" placeholder="Valor de Custo (R$)" required>
+                        <input type="number" step="0.01" id="prod-venda" placeholder="Valor de Venda (R$)" required>
+                        <input type="number" id="prod-qtd" placeholder="Quantidade em Estoque Geral" required>
+                        <button type="submit" id="btn-salvar-prod">Salvar Produto</button>
+                        <button type="button" id="btn-cancelar-prod" class="danger hidden" onclick="cancelarEdicaoProduto()">Cancelar Edição</button>
+                    </form>
+                    <div id="stock-list"></div>
+                </div>
             </div>
 
-            <!-- Atribuição de Sacolas aos Vendedores -->
-            <div class="card">
-                <h3>Gerenciar Sacolas dos Vendedores</h3>
-                <form id="sacola-form">
-                    <select id="sacola-vendedor" required>
-                        <option value="">Selecione o Vendedor</option>
-                    </select>
-                    <select id="sacola-produto" required>
-                        <option value="">Selecione o Produto</option>
-                    </select>
-                    <input type="number" id="sacola-qtd" placeholder="Quantidade para a Sacola" required min="1">
-                    <button type="submit">Enviar para Sacola do Vendedor</button>
-                </form>
-                <div id="admin-sacolas-status"></div>
+            <!-- Aba 3: Sacolas dos Vendedores -->
+            <div id="tab-sacolas" class="admin-tab-content hidden">
+                <div class="card">
+                    <h3>Atribuir / Gerenciar Sacolas dos Vendedores</h3>
+                    <form id="sacola-form">
+                        <select id="sacola-vendedor" required>
+                            <option value="">Selecione o Vendedor</option>
+                        </select>
+                        <select id="sacola-produto" required>
+                            <option value="">Selecione o Produto</option>
+                        </select>
+                        <input type="number" id="sacola-qtd" placeholder="Quantidade para a Sacola" required min="1">
+                        <button type="submit">Enviar para Sacola do Vendedor</button>
+                    </form>
+                    <div id="admin-sacolas-status"></div>
+                </div>
             </div>
         </section>
 
         <!-- Painel do Vendedor -->
         <section id="vendedor-panel" class="card hidden">
-            <h2>Painel do Vendedor</h2>
-            <p>Bem-vindo, <span id="vendedor-nome-display"></span>!</p>
-            <button id="btn-logout-vendedor" class="danger">Sair</button>
-
-            <div class="card" style="margin-top: 1.5rem;">
-                <h3>Sua Sacola Atual (Produtos Disponíveis para Venda)</h3>
-                <div id="vendedor-sacola-itens"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>Painel do Vendedor - Bem-vindo(a), <span id="vendedor-nome-display"></span></h2>
+                <button id="btn-logout-vendedor" class="danger" style="width: auto; padding: 0.5rem 1rem;">Sair</button>
             </div>
 
             <div class="card">
-                <h3>Registrar Venda</h3>
-                <form id="venda-form">
-                    <label>Cliente:</label>
-                    <input type="text" id="venda-cliente" placeholder="Nome do Cliente" required>
-
-                    <label>Itens Comprados:</label>
-                    <div id="venda-itens-container">
-                        <!-- Itens dinâmicos para suportar mais de um chocolate por cliente -->
-                    </div>
-                    <button type="button" id="btn-add-item-venda" style="background-color: var(--secondary-color); color: #333;">+ Adicionar outro item na mesma venda</button>
-
-                    <label for="venda-pagamento">Meio de Pagamento:</label>
-                    <select id="venda-pagamento" required>
-                        <option value="">Selecione a Forma de Pagamento</option>
-                        <option value="Dinheiro">Dinheiro</option>
-                        <option value="Cartão de Débito">Cartão de Débito</option>
-                        <option value="Cartão de Crédito">Cartão de Crédito</option>
-                        <option value="Pix">Pix</option>
-                        <option value="Fiado">Fiado</option>
-                    </select>
-
-                    <div style="margin: 1rem 0;">
-                        <label>
-                            <input type="checkbox" id="venda-uso-proprio" style="width: auto; margin-right: 5px;"> 
-                            Marcar como consumo próprio (Retirado para mim mesmo)
-                        </label>
-                    </div>
-
-                    <button type="submit" style="background-color: var(--success-color);">Finalizar Registro de Venda</button>
-                </form>
+                <h3>Sua Sacola Atual (Produtos Disponíveis)</h3>
+                <div id="vendedor-sacola-itens">Carregando itens da sacola...</div>
             </div>
         </section>
     </main>
