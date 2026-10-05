@@ -7,7 +7,7 @@
     --text-color: #333333;
     --border-color: #E0D6C3;
     --success-color: #2E7D32;
-    --danger-color: #C62828;
+    --danger-color: #631616;
     --warning-color: #D97706;
 }
 
@@ -117,7 +117,7 @@ button.danger {
     background-color: var(--danger-color);
 }
 button.danger:hover {
-    background-color: #9b1c1c;
+    background-color: #f62727;
 }
 
 button.warning {
