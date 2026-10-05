@@ -7,7 +7,7 @@
     --text-color: #333333;
     --border-color: #E0D6C3;
     --success-color: #2E7D32;
-    --danger-color: #631616;
+    --danger-color: #940000;
     --warning-color: #D97706;
 }
 
@@ -32,7 +32,7 @@ header {
     color: white;
     padding: 1.5rem;
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 2px 5px rgba(0, 0, 0, 0.274);
 }
 
 main {
