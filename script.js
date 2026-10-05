@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, getDocs, doc, setDoc, deleteDoc, updateDoc, query, where, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Credenciais do Firebase configuradas
 const firebaseConfig = {
     apiKey: "AIzaSyC98-4Ebs8p5ZWWglVI-XNvuYDBUxwv6Fs",
     authDomain: "gestaocacau-6b6e5.firebaseapp.com",
@@ -16,27 +15,30 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Seletores do DOM
 const loginSection = document.getElementById('login-section');
 const adminPanel = document.getElementById('admin-panel');
 const vendedorPanel = document.getElementById('vendedor-panel');
 const loginForm = document.getElementById('login-form');
 
-// --- CONTROLE DE ABAS DO ADMIN ---
+// --- CONTROLE DE ABAS ---
 window.alternarAbaAdmin = function(aba) {
     document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.admin-nav .nav-btn').forEach(el => el.classList.remove('active'));
 
     if (aba === 'usuarios') {
         document.getElementById('tab-usuarios').classList.remove('hidden');
-        event.currentTarget.classList.add('active');
     } else if (aba === 'estoque') {
         document.getElementById('tab-estoque').classList.remove('hidden');
-        event.currentTarget.classList.add('active');
+    } else if (aba === 'atribuir') {
+        document.getElementById('tab-atribuir').classList.remove('hidden');
     } else if (aba === 'sacolas') {
         document.getElementById('tab-sacolas').classList.remove('hidden');
-        event.currentTarget.classList.add('active');
+        carregarSelectsFiltroVendedor();
+    } else if (aba === 'lucros') {
+        document.getElementById('tab-lucros').classList.remove('hidden');
+        calcularRelatorioLucros();
     }
+    event.currentTarget.classList.add('active');
 }
 
 // --- AUTENTICAÇÃO ---
@@ -82,24 +84,22 @@ async function verificarPerfilUsuario(user) {
             carregarSacolaVendedor(user.email);
         }
     } else {
-        alert("Perfil de usuário não encontrado na base de dados de permissões do Firestore.");
+        alert("Perfil de usuário não encontrado no Firestore.");
     }
 }
 
-// --- GERENCIAMENTO DE USUÁRIOS (COM EDITAR E EXCLUIR) ---
+// --- USUÁRIOS ---
 const userForm = document.getElementById('user-form');
 userForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const editId = document.getElementById('edit-user-id').value;
     const nome = document.getElementById('user-nome').value;
     const email = document.getElementById('user-email').value;
-    const senha = document.getElementById('user-senha').value;
     const tipo = document.getElementById('user-tipo').value;
 
     try {
         if (editId) {
-            const userRef = doc(db, "usuarios", editId);
-            await updateDoc(userRef, { nome, email, tipo });
+            await updateDoc(doc(db, "usuarios", editId), { nome, email, tipo });
             alert("Usuário atualizado com sucesso!");
             cancelarEdicaoUsuario();
         } else {
@@ -109,16 +109,13 @@ userForm.addEventListener('submit', async (e) => {
         }
         carregarListaUsuarios();
     } catch (error) {
-        alert("Erro ao salvar usuário: " + error.message);
+        alert("Erro: " + error.message);
     }
 });
 
 async function carregarListaUsuarios() {
     const listaDiv = document.getElementById('users-list');
-    const selectVendedor = document.getElementById('sacola-vendedor');
     listaDiv.innerHTML = "";
-    selectVendedor.innerHTML = '<option value="">Selecione o Vendedor</option>';
-
     const querySnapshot = await getDocs(collection(db, "usuarios"));
     let html = "<table><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Ações</th></tr>";
     
@@ -126,9 +123,7 @@ async function carregarListaUsuarios() {
         const u = docSnap.data();
         const id = docSnap.id;
         html += `<tr>
-            <td>${u.nome}</td>
-            <td>${u.email}</td>
-            <td>${u.tipo}</td>
+            <td>${u.nome}</td><td>${u.email}</td><td>${u.tipo}</td>
             <td>
                 <div class="action-btns">
                     <button class="warning" onclick="prepararEdicaoUsuario('${id}', '${u.nome}', '${u.email}', '${u.tipo}')">Editar</button>
@@ -136,9 +131,6 @@ async function carregarListaUsuarios() {
                 </div>
             </td>
         </tr>`;
-        if (u.tipo === 'vendedor') {
-            selectVendedor.innerHTML += `<option value="${u.email}">${u.nome}</option>`;
-        }
     });
     html += "</table>";
     listaDiv.innerHTML = html;
@@ -150,7 +142,6 @@ window.prepararEdicaoUsuario = function(id, nome, email, tipo) {
     document.getElementById('user-email').value = email;
     document.getElementById('user-senha').value = "******";
     document.getElementById('user-tipo').value = tipo;
-    
     document.getElementById('user-form-title').innerText = "Editar Usuário";
     document.getElementById('btn-salvar-user').innerText = "Salvar Alterações";
     document.getElementById('btn-cancelar-user').classList.remove('hidden');
@@ -165,18 +156,13 @@ window.cancelarEdicaoUsuario = function() {
 }
 
 window.excluirUsuario = async function(id) {
-    if (confirm("Tem certeza que deseja excluir este usuário?")) {
-        try {
-            await deleteDoc(doc(db, "usuarios", id));
-            alert("Usuário excluído com sucesso!");
-            carregarListaUsuarios();
-        } catch (error) {
-            alert("Erro ao excluir: " + error.message);
-        }
+    if (confirm("Excluir este usuário?")) {
+        await deleteDoc(doc(db, "usuarios", id));
+        carregarListaUsuarios();
     }
 }
 
-// --- GERENCIAMENTO DE ESTOQUE E PRODUTOS (COM EDITAR E EXCLUIR) ---
+// --- ESTOQUE E PRODUTOS ---
 const productForm = document.getElementById('product-form');
 productForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -190,9 +176,8 @@ productForm.addEventListener('submit', async (e) => {
 
     try {
         if (editId) {
-            const prodRef = doc(db, "produtos", editId);
-            await updateDoc(prodRef, { nome, categoria, custo, venda, lucro, qtd });
-            alert("Produto atualizado com sucesso!");
+            await updateDoc(doc(db, "produtos", editId), { nome, categoria, custo, venda, lucro, qtd });
+            alert("Produto atualizado!");
             cancelarEdicaoProduto();
         } else {
             await addDoc(collection(db, "produtos"), { nome, categoria, custo, venda, lucro, qtd });
@@ -201,7 +186,7 @@ productForm.addEventListener('submit', async (e) => {
         }
         carregarEstoque();
     } catch (error) {
-        alert("Erro ao salvar produto: " + error.message);
+        alert("Erro: " + error.message);
     }
 });
 
@@ -218,10 +203,8 @@ async function carregarEstoque() {
         const p = docSnap.data();
         const id = docSnap.id;
         html += `<tr>
-            <td>${p.categoria}</td>
-            <td>${p.nome}</td>
-            <td>R$ ${p.custo.toFixed(2)}</td>
-            <td>R$ ${p.venda.toFixed(2)}</td>
+            <td>${p.categoria}</td><td>${p.nome}</td>
+            <td>R$ ${p.custo.toFixed(2)}</td><td>R$ ${p.venda.toFixed(2)}</td>
             <td style="color: green; font-weight: bold;">R$ ${p.lucro.toFixed(2)}</td>
             <td>${p.qtd}</td>
             <td>
@@ -244,7 +227,6 @@ window.prepararEdicaoProduto = function(id, nome, categoria, custo, venda, qtd) 
     document.getElementById('prod-custo').value = custo;
     document.getElementById('prod-venda').value = venda;
     document.getElementById('prod-qtd').value = qtd;
-
     document.getElementById('product-form-title').innerText = "Editar Produto";
     document.getElementById('btn-salvar-prod').innerText = "Salvar Alterações";
     document.getElementById('btn-cancelar-prod').classList.remove('hidden');
@@ -259,23 +241,175 @@ window.cancelarEdicaoProduto = function() {
 }
 
 window.excluirProduto = async function(id) {
-    if (confirm("Tem certeza que deseja excluir este produto do estoque?")) {
+    if (confirm("Excluir este produto?")) {
+        await deleteDoc(doc(db, "produtos", id));
+        carregarEstoque();
+    }
+}
+
+// --- ATRIBUIÇÃO E GESTÃO DE SACOLAS ---
+const sacolaForm = document.getElementById('sacola-form');
+sacolaForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const vendedorEmail = document.getElementById('sacola-vendedor').value;
+    const produtoId = document.getElementById('sacola-produto').value;
+    const qtdAtribuida = parseInt(document.getElementById('sacola-qtd').value);
+
+    try {
+        // Busca dados do produto para salvar na sacola
+        const prodDoc = await getDoc(doc(db, "produtos", produtoId));
+        if (!prodDoc.exists()) {
+            alert("Produto não encontrado.");
+            return;
+        }
+        const prodData = prodDoc.data();
+
+        // Salva na coleção "sacolas"
+        await addDoc(collection(db, "sacolas"), {
+            vendedorEmail,
+            produtoId,
+            nomeProduto: prodData.nome,
+            categoria: prodData.categoria,
+            valorVenda: prodData.venda,
+            quantidade: qtdAtribuida
+        });
+
+        alert("Produto adicionado à sacola do vendedor com sucesso!");
+        sacolaForm.reset();
+    } catch (error) {
+        alert("Erro ao atribuir sacola: " + error.message);
+    }
+});
+
+async function carregarSelectsFiltroVendedor() {
+    const selectFiltro = document.getElementById('filtro-vendedor-sacola');
+    const selectAtribuir = document.getElementById('sacola-vendedor');
+    selectFiltro.innerHTML = '<option value="">Selecione o Vendedor</option>';
+    selectAtribuir.innerHTML = '<option value="">Selecione o Vendedor</option>';
+
+    const querySnapshot = await getDocs(collection(db, "usuarios"));
+    querySnapshot.forEach((docSnap) => {
+        const u = docSnap.data();
+        if (u.tipo === 'vendedor') {
+            selectFiltro.innerHTML += `<option value="${u.email}">${u.nome} (${u.email})</option>`;
+            selectAtribuir.innerHTML += `<option value="${u.email}">${u.nome} (${u.email})</option>`;
+        }
+    });
+}
+
+window.carregarSacolasAdmin = async function() {
+    const vendedorEmail = document.getElementById('filtro-vendedor-sacola').value;
+    const container = document.getElementById('admin-sacolas-conteudo');
+    if (!vendedorEmail) {
+        container.innerHTML = "<p>Selecione um vendedor acima.</p>";
+        return;
+    }
+
+    container.innerHTML = "<p>Carregando sacola...</p>";
+    const q = query(collection(db, "sacolas"), where("vendedorEmail", "==", vendedorEmail));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+        container.innerHTML = "<p>Este vendedor não possui itens na sacola no momento.</p>";
+        return;
+    }
+
+    let html = "<table><tr><th>Produto</th><th>Categoria</th><th>Preço Venda</th><th>Qtd na Sacola</th><th>Ações</th></tr>";
+    querySnapshot.forEach((docSnap) => {
+        const item = docSnap.data();
+        const id = docSnap.id;
+        html += `<tr>
+            <td>${item.nomeProduto}</td>
+            <td>${item.categoria}</td>
+            <td>R$ ${item.valorVenda.toFixed(2)}</td>
+            <td><input type="number" id="qtd-sacola-${id}" value="${item.quantidade}" style="width: 70px; margin-bottom: 0;"></td>
+            <td>
+                <div class="action-btns">
+                    <button class="warning" onclick="atualizarQtdSacola('${id}')">Salvar</button>
+                    <button class="danger" onclick="removerItemSacola('${id}')">Remover</button>
+                </div>
+            </td>
+        </tr>`;
+    });
+    html += "</table>";
+    container.innerHTML = html;
+}
+
+window.atualizarQtdSacola = async function(id) {
+    const novaQtd = parseInt(document.getElementById(`qtd-sacola-${id}`).value);
+    if (isNaN(novaQtd) || novaQtd < 1) {
+        alert("Insira uma quantidade válida.");
+        return;
+    }
+    try {
+        await updateDoc(doc(db, "sacolas", id), { quantidade: novaQtd });
+        alert("Quantidade atualizada na sacola!");
+        carregarSacolasAdmin();
+    } catch (error) {
+        alert("Erro ao atualizar: " + error.message);
+    }
+}
+
+window.removerItemSacola = async function(id) {
+    if (confirm("Deseja retirar este item da sacola do vendedor?")) {
         try {
-            await deleteDoc(doc(db, "produtos", id));
-            alert("Produto excluído com sucesso!");
-            carregarEstoque();
+            await deleteDoc(doc(db, "sacolas", id));
+            alert("Item removido da sacola!");
+            carregarSacolasAdmin();
         } catch (error) {
-            alert("Erro ao excluir: " + error.message);
+            alert("Erro ao remover: " + error.message);
         }
     }
+}
+
+// --- RELATÓRIO DE LUCROS ---
+async function calcularRelatorioLucros() {
+    const querySnapshot = await getDocs(collection(db, "produtos"));
+    let custoTotal = 0;
+    let vendaTotal = 0;
+    let lucroTotal = 0;
+
+    querySnapshot.forEach((docSnap) => {
+        const p = docSnap.data();
+        const qtd = p.qtd || 0;
+        custoTotal += (p.custo * qtd);
+        vendaTotal += (p.venda * qtd);
+        lucroTotal += (p.lucro * qtd);
+    });
+
+    document.getElementById('relatorio-custo-total').innerText = `R$ ${custoTotal.toFixed(2)}`;
+    document.getElementById('relatorio-venda-total').innerText = `R$ ${vendaTotal.toFixed(2)}`;
+    document.getElementById('relatorio-lucro-total').innerText = `R$ ${lucroTotal.toFixed(2)}`;
+}
+
+// --- PAINEL DO VENDEDOR ---
+async function carregarSacolaVendedor(emailVendedor) {
+    const container = document.getElementById('vendedor-sacola-itens');
+    container.innerHTML = "<p>Carregando sua sacola...</p>";
+
+    const q = query(collection(db, "sacolas"), where("vendedorEmail", "==", emailVendedor));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+        container.innerHTML = "<p>Sua sacola está vazia no momento. Aguarde o Administrador adicionar produtos.</p>";
+        return;
+    }
+
+    let html = "<table><tr><th>Produto</th><th>Categoria</th><th>Valor de Venda</th><th>Quantidade Disponível</th></tr>";
+    querySnapshot.forEach((docSnap) => {
+        const item = docSnap.data();
+        html += `<tr>
+            <td>${item.nomeProduto}</td>
+            <td>${item.categoria}</td>
+            <td style="font-weight: bold; color: var(--primary-color);">R$ ${item.valorVenda.toFixed(2)}</td>
+            <td>${item.quantidade} unidades</td>
+        </tr>`;
+    });
+    html += "</table>";
+    container.innerHTML = html;
 }
 
 function carregarDadosAdmin() {
     carregarListaUsuarios();
     carregarEstoque();
-}
-
-async function carregarSacolaVendedor(emailVendedor) {
-    const container = document.getElementById('vendedor-sacola-itens');
-    container.innerHTML = "<p>Sua sacola está pronta para receber os itens atribuídos pelo Administrador.</p>";
 }

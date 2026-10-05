@@ -9,8 +9,8 @@
 <body>
 
     <header>
-        <h1>CacauDelShow</h1>
-        <p>Gestão de vendas</p>
+        <h1>Painel de Gestão - Cacau Show</h1>
+        <p>Controle de Estoque, Vendedores e Sacolas</p>
     </header>
 
     <main>
@@ -37,12 +37,14 @@
             
             <!-- Navbar / Abas do Admin -->
             <nav class="admin-nav">
-                <button class="nav-btn active" onclick="alternarAbaAdmin('usuarios')">Gerenciar Usuários</button>
-                <button class="nav-btn" onclick="alternarAbaAdmin('estoque')">Estoque e Produtos</button>
-                <button class="nav-btn" onclick="alternarAbaAdmin('sacolas')">Sacolas dos Vendedores</button>
+                <button class="nav-btn active" onclick="alternarAbaAdmin('usuarios')">Usuários</button>
+                <button class="nav-btn" onclick="alternarAbaAdmin('estoque')">Estoque</button>
+                <button class="nav-btn" onclick="alternarAbaAdmin('atribuir')">Montar Sacola</button>
+                <button class="nav-btn" onclick="alternarAbaAdmin('sacolas')">Sacolas Ativas</button>
+                <button class="nav-btn" onclick="alternarAbaAdmin('lucros')">Relatório de Lucros</button>
             </nav>
 
-            <!-- Aba 1: Gerenciamento de Usuários -->
+            <!-- Aba 1: Usuários -->
             <div id="tab-usuarios" class="admin-tab-content">
                 <div class="card">
                     <h3 id="user-form-title">Cadastrar Novo Usuário</h3>
@@ -63,7 +65,7 @@
                 </div>
             </div>
 
-            <!-- Aba 2: Estoque e Produtos -->
+            <!-- Aba 2: Estoque -->
             <div id="tab-estoque" class="admin-tab-content hidden">
                 <div class="card">
                     <h3 id="product-form-title">Adicionar Produto ao Estoque</h3>
@@ -81,10 +83,10 @@
                 </div>
             </div>
 
-            <!-- Aba 3: Sacolas dos Vendedores -->
-            <div id="tab-sacolas" class="admin-tab-content hidden">
+            <!-- Aba 3: Atribuir Sacola -->
+            <div id="tab-atribuir" class="admin-tab-content hidden">
                 <div class="card">
-                    <h3>Atribuir / Gerenciar Sacolas dos Vendedores</h3>
+                    <h3>Enviar Produtos para a Sacola do Vendedor</h3>
                     <form id="sacola-form">
                         <select id="sacola-vendedor" required>
                             <option value="">Selecione o Vendedor</option>
@@ -93,9 +95,41 @@
                             <option value="">Selecione o Produto</option>
                         </select>
                         <input type="number" id="sacola-qtd" placeholder="Quantidade para a Sacola" required min="1">
-                        <button type="submit">Enviar para Sacola do Vendedor</button>
+                        <button type="submit">Adicionar à Sacola do Vendedor</button>
                     </form>
-                    <div id="admin-sacolas-status"></div>
+                </div>
+            </div>
+
+            <!-- Aba 4: Sacolas Ativas (Ver e Editar o que cada um tem) -->
+            <div id="tab-sacolas" class="admin-tab-content hidden">
+                <div class="card">
+                    <h3>Sacolas Ativas por Vendedor</h3>
+                    <label for="filtro-vendedor-sacola">Escolha o Vendedor:</label>
+                    <select id="filtro-vendedor-sacola" onchange="carregarSacolasAdmin()">
+                        <option value="">Selecione o Vendedor para ver a sacola</option>
+                    </select>
+                    <div id="admin-sacolas-conteudo" style="margin-top: 1rem;"></div>
+                </div>
+            </div>
+
+            <!-- Aba 5: Relatório de Lucros -->
+            <div id="tab-lucros" class="admin-tab-content hidden">
+                <div class="card">
+                    <h3>Visão Geral Financeira (Estoque)</h3>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <h4>Custo Total em Estoque</h4>
+                            <p id="relatorio-custo-total">R$ 0,00</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>Valor de Venda Total</h4>
+                            <p id="relatorio-venda-total">R$ 0,00</p>
+                        </div>
+                        <div class="stat-box" style="border-left-color: var(--success-color);">
+                            <h4>Lucro Previsto Total</h4>
+                            <p id="relatorio-lucro-total" style="color: var(--success-color);">R$ 0,00</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -103,7 +137,7 @@
         <!-- Painel do Vendedor -->
         <section id="vendedor-panel" class="card hidden">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h2>Painel do Vendedor - Bem-vindo(a), <span id="vendedor-nome-display"></span></h2>
+                <h2>Painel do Vendedor - <span id="vendedor-nome-display"></span></h2>
                 <button id="btn-logout-vendedor" class="danger" style="width: auto; padding: 0.5rem 1rem;">Sair</button>
             </div>
 
@@ -114,7 +148,6 @@
         </section>
     </main>
 
-    <!-- SDK do Firebase (Modular v10+) -->
     <script type="module" src="script.js"></script>
 </body>
 </html>

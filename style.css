@@ -1,13 +1,13 @@
 :root {
-    --primary-color: #6F4E37; /* Tom de chocolate */
+    --primary-color: #6F4E37;
     --secondary-color: #D2B48C;
     --accent-color: #C85A17;
-    --bg-color: #323232;
+    --bg-color: #Fdfbf7;
     --card-bg: #FFFFFF;
     --text-color: #333333;
     --border-color: #E0D6C3;
     --success-color: #2E7D32;
-    --danger-color: #940000;
+    --danger-color: #C62828;
     --warning-color: #D97706;
 }
 
@@ -32,7 +32,7 @@ header {
     color: white;
     padding: 1.5rem;
     text-align: center;
-    box-shadow: 2px 5px rgba(0, 0, 0, 0.274);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 main {
@@ -47,7 +47,6 @@ main {
     display: none !important;
 }
 
-/* Cards e Painéis */
 .card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
@@ -62,10 +61,10 @@ h2, h3 {
     margin-bottom: 1rem;
 }
 
-/* Navbar de Abas do Admin */
+/* Navbar / Abas */
 .admin-nav {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     border-bottom: 2px solid var(--border-color);
@@ -76,7 +75,7 @@ h2, h3 {
     background-color: var(--secondary-color);
     color: var(--text-color);
     border: none;
-    padding: 0.6rem 1.2rem;
+    padding: 0.6rem 1rem;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
@@ -88,6 +87,33 @@ h2, h3 {
 .nav-btn.active, .nav-btn:hover {
     background-color: var(--primary-color);
     color: white;
+}
+
+/* Cards de Resumo de Lucro */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-box {
+    background-color: #f4efe6;
+    border-left: 4px solid var(--primary-color);
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.stat-box h4 {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.3rem;
+}
+
+.stat-box p {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--primary-color);
 }
 
 /* Formulários e Inputs */
@@ -109,25 +135,12 @@ button {
     transition: background 0.3s;
 }
 
-button:hover {
-    background-color: #553926;
-}
+button:hover { background-color: #553926; }
+button.danger { background-color: var(--danger-color); }
+button.danger:hover { background-color: #9b1c1c; }
+button.warning { background-color: var(--warning-color); }
+button.warning:hover { background-color: #b45309; }
 
-button.danger {
-    background-color: var(--danger-color);
-}
-button.danger:hover {
-    background-color: #f62727;
-}
-
-button.warning {
-    background-color: var(--warning-color);
-}
-button.warning:hover {
-    background-color: #b45309;
-}
-
-/* Tabelas e Botões de Ação nas Tabelas */
 table {
     width: 100%;
     border-collapse: collapse;
