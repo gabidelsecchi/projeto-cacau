@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão - Revenda Cacau Show</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Painel de Gestão - Cacau Show</h1>
+        <p>Controle de Estoque, Vendedores e Sacolas</p>
+    </header>
+
+    <main>
+        <!-- Seção de Login -->
+        <section id="login-section" class="card">
+            <h2>Acesso ao Sistema</h2>
+            <form id="login-form">
+                <label for="login-email">E-mail:</label>
+                <input type="email" id="login-email" required placeholder="seu@email.com">
+                
+                <label for="login-senha">Senha:</label>
+                <input type="password" id="login-senha" required placeholder="Sua senha">
+                
+                <button type="submit">Entrar</button>
+            </form>
+        </section>
+
+        <!-- Painel do Administrador -->
+        <section id="admin-panel" class="card hidden">
+            <h2>Painel do Administrador</h2>
+            <button id="btn-logout" class="danger">Sair do Sistema</button>
+            
+            <hr style="margin: 1.5rem 0;">
+
+            <!-- Gerenciamento de Usuários -->
+            <div class="card">
+                <h3>Gerenciar Usuários (Adms e Vendedores)</h3>
+                <form id="user-form">
+                    <input type="text" id="user-nome" placeholder="Nome do Usuário" required>
+                    <input type="email" id="user-email" placeholder="E-mail" required>
+                    <input type="password" id="user-senha" placeholder="Senha temporária" required>
+                    <select id="user-tipo" required>
+                        <option value="">Selecione o Perfil</option>
+                        <option value="admin">Administrador</option>
+                        <option value="vendedor">Vendedor</option>
+                    </select>
+                    <button type="submit">Cadastrar Usuário</button>
+                </form>
+                <div id="users-list"></div>
+            </div>
+
+            <!-- Cadastro de Chocolates / Estoque -->
+            <div class="card">
+                <h3>Estoque e Produtos</h3>
+                <form id="product-form">
+                    <input type="text" id="prod-nome" placeholder="Nome do Chocolate" required>
+                    <input type="text" id="prod-categoria" placeholder="Categoria (ex: Trufas, Tabletes, Panetones)" required>
+                    <input type="number" step="0.01" id="prod-custo" placeholder="Valor de Custo (R$)" required>
+                    <input type="number" step="0.01" id="prod-venda" placeholder="Valor de Venda (R$)" required>
+                    <input type="number" id="prod-qtd" placeholder="Quantidade em Estoque Geral" required>
+                    <button type="submit">Adicionar Produto ao Estoque</button>
+                </form>
+                <div id="stock-list"></div>
+            </div>
+
+            <!-- Atribuição de Sacolas aos Vendedores -->
+            <div class="card">
+                <h3>Gerenciar Sacolas dos Vendedores</h3>
+                <form id="sacola-form">
+                    <select id="sacola-vendedor" required>
+                        <option value="">Selecione o Vendedor</option>
+                    </select>
+                    <select id="sacola-produto" required>
+                        <option value="">Selecione o Produto</option>
+                    </select>
+                    <input type="number" id="sacola-qtd" placeholder="Quantidade para a Sacola" required min="1">
+                    <button type="submit">Enviar para Sacola do Vendedor</button>
+                </form>
+                <div id="admin-sacolas-status"></div>
+            </div>
+        </section>
+
+        <!-- Painel do Vendedor -->
+        <section id="vendedor-panel" class="card hidden">
+            <h2>Painel do Vendedor</h2>
+            <p>Bem-vindo, <span id="vendedor-nome-display"></span>!</p>
+            <button id="btn-logout-vendedor" class="danger">Sair</button>
+
+            <div class="card" style="margin-top: 1.5rem;">
+                <h3>Sua Sacola Atual (Produtos Disponíveis para Venda)</h3>
+                <div id="vendedor-sacola-itens"></div>
+            </div>
+
+            <div class="card">
+                <h3>Registrar Venda</h3>
+                <form id="venda-form">
+                    <label>Cliente:</label>
+                    <input type="text" id="venda-cliente" placeholder="Nome do Cliente" required>
+
+                    <label>Itens Comprados:</label>
+                    <div id="venda-itens-container">
+                        <!-- Itens dinâmicos para suportar mais de um chocolate por cliente -->
+                    </div>
+                    <button type="button" id="btn-add-item-venda" style="background-color: var(--secondary-color); color: #333;">+ Adicionar outro item na mesma venda</button>
+
+                    <label for="venda-pagamento">Meio de Pagamento:</label>
+                    <select id="venda-pagamento" required>
+                        <option value="">Selecione a Forma de Pagamento</option>
+                        <option value="Dinheiro">Dinheiro</option>
+                        <option value="Cartão de Débito">Cartão de Débito</option>
+                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                        <option value="Pix">Pix</option>
+                        <option value="Fiado">Fiado</option>
+                    </select>
+
+                    <div style="margin: 1rem 0;">
+                        <label>
+                            <input type="checkbox" id="venda-uso-proprio" style="width: auto; margin-right: 5px;"> 
+                            Marcar como consumo próprio (Retirado para mim mesmo)
+                        </label>
+                    </div>
+
+                    <button type="submit" style="background-color: var(--success-color);">Finalizar Registro de Venda</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- SDK do Firebase (Modular v10+) -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
