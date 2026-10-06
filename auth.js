@@ -1,20 +1,39 @@
-// Exemplo simplificado dentro do auth.js
-document.getElementById('login-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const email = document.getElementById('login-email').value;
-    const senha = document.getElementById('login-senha').value;
+// auth.js
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('login-form');
+    if (!loginForm) return;
 
-    // ... sua lógica para buscar o usuário no banco/localStorage ...
-    // Suponha que você encontrou o usuário e ele é um objeto:
-    // const usuario = { nome: "Ana", email: "...", tipo: "admin" ou "vendedor" };
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('login-email').value.trim();
+        const senha = document.getElementById('login-senha').value.trim();
 
-    // Salvamos na sessão do navegador
-    localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+        // Exemplo: Recuperando usuários salvos no localStorage (ou use sua lógica existente)
+        const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        
+        // Se for o primeiro acesso e não houver usuários cadastrados, crie um admin padrão para teste:
+        if (usuarios.length === 0 && email === 'admin@cacaushow.com' && senha === '123456') {
+            const adminPadrao = { id: 1, nome: 'Administrador', email, senha, tipo: 'admin' };
+            usuarios.push(adminPadrao);
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+        }
 
-    // Redireciona com base no tipo
-    if (usuario.tipo === 'admin') {
-        window.location.href = 'admin.html';
-    } else if (usuario.tipo === 'vendedor') {
-        window.location.href = 'vendedor.html';
-    }
+        // Buscar o usuário correspondente
+        const usuarioEncontrado = usuarios.find(u => u.email === email && u.senha === senha);
+
+        if (usuarioEncontrado) {
+            // Salva o usuário logado na sessão do navegador
+            localStorage.setItem('usuarioLogado', JSON.stringify(usuarioEncontrado));
+
+            // Redireciona com base no tipo de perfil
+            if (usuarioEncontrado.tipo === 'admin') {
+                window.location.href = 'admin.html';
+            } else if (usuarioEncontrado.tipo === 'vendedor') {
+                window.location.href = 'vendedor.html';
+            }
+        } else {
+            alert('E-mail ou senha incorretos!');
+        }
+    });
 });
