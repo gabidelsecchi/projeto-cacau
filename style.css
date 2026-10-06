@@ -68,15 +68,22 @@ main {
     display: none !important;
 }
 
+/* Card padrão para o painel e outras telas (ocupa o espaço do container) */
 .card {
-    background-color: var(--card-bg)
+    background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 2rem;
-    margin: 2rem auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.37);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Card específico para a tela de Login (menor e centralizado) */
+.login-card {
     max-width: 420px;
     width: 100%;
+    margin: 2rem auto;
+    padding: 2rem;
 }
 
 h2, h3 {
