@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão - Revenda Cacau Show</title>
+    <title>Login - Gestão Cacau Show</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,7 +14,6 @@
     </header>
 
     <main>
-        <!-- Seção de Login -->
         <section id="login-section" class="card">
             <h2>Acesso ao Sistema</h2>
             <form id="login-form">
@@ -27,127 +26,8 @@
                 <button type="submit">Entrar</button>
             </form>
         </section>
-
-        <!-- Painel do Administrador -->
-        <section id="admin-panel" class="card hidden">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h2>Painel do Administrador</h2>
-                <button id="btn-logout" class="danger" style="width: auto; padding: 0.5rem 1rem;">Sair do Sistema</button>
-            </div>
-            
-            <!-- Navbar / Abas do Admin -->
-            <nav class="admin-nav">
-                <button class="nav-btn active" onclick="alternarAbaAdmin('usuarios')">Usuários</button>
-                <button class="nav-btn" onclick="alternarAbaAdmin('estoque')">Estoque</button>
-                <button class="nav-btn" onclick="alternarAbaAdmin('atribuir')">Montar Sacola</button>
-                <button class="nav-btn" onclick="alternarAbaAdmin('sacolas')">Sacolas Ativas</button>
-                <button class="nav-btn" onclick="alternarAbaAdmin('lucros')">Relatório de Lucros</button>
-            </nav>
-
-            <!-- Aba 1: Usuários -->
-            <div id="tab-usuarios" class="admin-tab-content">
-                <div class="card">
-                    <h3 id="user-form-title">Cadastrar Novo Usuário</h3>
-                    <form id="user-form">
-                        <input type="hidden" id="edit-user-id">
-                        <input type="text" id="user-nome" placeholder="Nome do Usuário" required>
-                        <input type="email" id="user-email" placeholder="E-mail" required>
-                        <input type="password" id="user-senha" placeholder="Senha temporária" required>
-                        <select id="user-tipo" required>
-                            <option value="">Selecione o Perfil</option>
-                            <option value="admin">Administrador</option>
-                            <option value="vendedor">Vendedor</option>
-                        </select>
-                        <button type="submit" id="btn-salvar-user">Cadastrar Usuário</button>
-                        <button type="button" id="btn-cancelar-user" class="danger hidden" onclick="cancelarEdicaoUsuario()">Cancelar Edição</button>
-                    </form>
-                    <div id="users-list"></div>
-                </div>
-            </div>
-
-            <!-- Aba 2: Estoque -->
-            <div id="tab-estoque" class="admin-tab-content hidden">
-                <div class="card">
-                    <h3 id="product-form-title">Adicionar Produto ao Estoque</h3>
-                    <form id="product-form">
-                        <input type="hidden" id="edit-prod-id">
-                        <input type="text" id="prod-nome" placeholder="Nome do Chocolate" required>
-                        <input type="text" id="prod-categoria" placeholder="Categoria (ex: Trufas, Tabletes, Panetones)" required>
-                        <input type="number" step="0.01" id="prod-custo" placeholder="Valor de Custo (R$)" required>
-                        <input type="number" step="0.01" id="prod-venda" placeholder="Valor de Venda (R$)" required>
-                        <input type="number" id="prod-qtd" placeholder="Quantidade em Estoque Geral" required>
-                        <button type="submit" id="btn-salvar-prod">Salvar Produto</button>
-                        <button type="button" id="btn-cancelar-prod" class="danger hidden" onclick="cancelarEdicaoProduto()">Cancelar Edição</button>
-                    </form>
-                    <div id="stock-list"></div>
-                </div>
-            </div>
-
-            <!-- Aba 3: Atribuir Sacola -->
-            <div id="tab-atribuir" class="admin-tab-content hidden">
-                <div class="card">
-                    <h3>Enviar Produtos para a Sacola do Vendedor</h3>
-                    <form id="sacola-form">
-                        <select id="sacola-vendedor" required>
-                            <option value="">Selecione o Vendedor</option>
-                        </select>
-                        <select id="sacola-produto" required>
-                            <option value="">Selecione o Produto</option>
-                        </select>
-                        <input type="number" id="sacola-qtd" placeholder="Quantidade para a Sacola" required min="1">
-                        <button type="submit">Adicionar à Sacola do Vendedor</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Aba 4: Sacolas Ativas (Ver e Editar o que cada um tem) -->
-            <div id="tab-sacolas" class="admin-tab-content hidden">
-                <div class="card">
-                    <h3>Sacolas Ativas por Vendedor</h3>
-                    <label for="filtro-vendedor-sacola">Escolha o Vendedor:</label>
-                    <select id="filtro-vendedor-sacola" onchange="carregarSacolasAdmin()">
-                        <option value="">Selecione o Vendedor para ver a sacola</option>
-                    </select>
-                    <div id="admin-sacolas-conteudo" style="margin-top: 1rem;"></div>
-                </div>
-            </div>
-
-            <!-- Aba 5: Relatório de Lucros -->
-            <div id="tab-lucros" class="admin-tab-content hidden">
-                <div class="card">
-                    <h3>Visão Geral Financeira (Estoque)</h3>
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <h4>Custo Total em Estoque</h4>
-                            <p id="relatorio-custo-total">R$ 0,00</p>
-                        </div>
-                        <div class="stat-box">
-                            <h4>Valor de Venda Total</h4>
-                            <p id="relatorio-venda-total">R$ 0,00</p>
-                        </div>
-                        <div class="stat-box" style="border-left-color: var(--success-color);">
-                            <h4>Lucro Previsto Total</h4>
-                            <p id="relatorio-lucro-total" style="color: var(--success-color);">R$ 0,00</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Painel do Vendedor -->
-        <section id="vendedor-panel" class="card hidden">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h2>Painel do Vendedor - <span id="vendedor-nome-display"></span></h2>
-                <button id="btn-logout-vendedor" class="danger" style="width: auto; padding: 0.5rem 1rem;">Sair</button>
-            </div>
-
-            <div class="card">
-                <h3>Sua Sacola Atual (Produtos Disponíveis)</h3>
-                <div id="vendedor-sacola-itens">Carregando itens da sacola...</div>
-            </div>
-        </section>
     </main>
 
-    <script type="module" src="script.js"></script>
+    <script type="module" src="auth.js"></script>
 </body>
 </html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Vendedor - Cacau Show</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Proteção de Rota Imediata -->
+    <script>
+        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+        if (!usuarioLogado || usuarioLogado.tipo !== 'vendedor') {
+            alert('Acesso negado! Faça login como Vendedor.');
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <header>
+        <h1>Painel de Gestão - Cacau Show</h1>
+        <p>Área do Vendedor</p>
+    </header>
+
+    <main>
+        <section class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2>Painel do Vendedor - <span id="vendedor-nome-display"></span></h2>
+                <button id="btn-logout-vendedor" class="danger" style="width: auto; padding: 0.5rem 1rem;">Sair</button>
+            </div>
+
+            <div class="card">
+                <h3>Sua Sacola Atual (Produtos Disponíveis)</h3>
+                <div id="vendedor-sacola-itens">Carregando itens da sacola...</div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="vendedor.js"></script>
+</body>
+</html>
