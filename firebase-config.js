@@ -5,12 +5,12 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.x.x/firebase
 
 // Suas credenciais do projeto Firebase
 const firebaseConfig = {
-    apiKey: "SUA_API_KEY",
-    authDomain: "seu-projeto.firebaseapp.com",
-    projectId: "seu-projeto",
-    storageBucket: "seu-projeto.appspot.com",
-    messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-    appId: "SEU_APP_ID"
+    apiKey: "AIzaSyC98-4Ebs8p5ZWWglVI-XNvuYDBUxwv6Fs",
+    authDomain: "gestaocacau-6b6e5.firebaseapp.com",
+    projectId: "gestaocacau-6b6e5",
+    storageBucket: "gestaocacau-6b6e5.firebasestorage.app",
+    messagingSenderId: "524165694734",
+    appId: "1:524165694734:web:92bd448a39338529e3435f"
 };
 
 // Inicializa o Firebase
