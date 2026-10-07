@@ -3,38 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Vendedor - Cacau Show</title>
+    <title>Painel do Vendedor - CacauDelShow</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="dashboard-body">
 
-    <!-- Proteção de Rota Imediata -->
-    <script>
-        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-        if (!usuarioLogado || usuarioLogado.tipo !== 'vendedor') {
-            alert('Acesso negado! Faça login como Vendedor.');
-            window.location.href = 'index.html';
-        }
-    </script>
-
-    <header>
-        <h1>Painel de Gestão - Cacau Show</h1>
-        <p>Área do Vendedor</p>
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1>CacauDelShow</h1>
+            <p>Painel de Vendas e Estoque</p>
+        </div>
+        <div class="user-actions">
+            <span id="user-greeting">Olá, Vendedor(a)</span>
+            <button id="btn-logout" class="btn-secondary">Sair</button>
+        </div>
     </header>
 
-    <main>
-        <section class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h2>Painel do Vendedor - <span id="vendedor-nome-display"></span></h2>
-                <button id="btn-logout-vendedor" class="danger" style="width: auto; padding: 0.5rem 1rem;">Sair</button>
-            </div>
-
-            <div class="card">
-                <h3>Sua Sacola Atual (Produtos Disponíveis)</h3>
-                <div id="vendedor-sacola-itens">Carregando itens da sacola...</div>
+    <main class="dashboard-main vendor-main">
+        <!-- Seção de Produtos / Estoque -->
+        <section class="products-section">
+            <h2>Produtos Disponíveis</h2>
+            <div id="produtos-grid" class="produtos-grid">
+                <!-- Os produtos cadastrados no Supabase vão aparecer aqui dinamicamente -->
+                <p>Carregando produtos...</p>
             </div>
         </section>
+
+        <!-- Seção da Sacola / Carrinho -->
+        <section class="bag-section card">
+            <h2>Sua Sacola de Vendas</h2>
+            <div id="bag-items" class="bag-items">
+                <p class="empty-bag">A sacola está vazia.</p>
+            </div>
+            <div class="bag-total">
+                <strong>Total: R$ <span id="bag-total-value">0.00</span></strong>
+            </div>
+            <button id="btn-finalizar-venda" class="btn-primary" disabled>Finalizar Venda</button>
+        </section>
     </main>
+
+    <footer>
+        <p>&copy; Desenvolvido por <strong>Fernando Pereira Nilsen</strong> e <strong>Gabriela Del Secchi</strong></p>
+    </footer>
 
     <script type="module" src="vendedor.js"></script>
 </body>

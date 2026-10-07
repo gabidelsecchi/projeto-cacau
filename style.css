@@ -1,214 +1,323 @@
-/* Importando a fonte moderna/elegante */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap');
-
-
-:root {
-    --primary-color: #6F4E37;
-    --secondary-color: #D2B48C;
-    --accent-color: #C85A17;
-    --bg-color: #Fdfbf7;
-    --card-bg: #FFFFFF;
-    --text-color: #333333;
-    --border-color: #E0D6C3;
-    --success-color: #2E7D32;
-    --danger-color: #C62828;
-    --warning-color: #D97706;
-}
-
+/* Configurações Globais */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif; /* Fonte padrão para os textos do site */
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    line-height: 1.6;
+    font-family: 'Poppins', sans-serif;
+    /* Fundo com imagem de uma loja de chocolates elegante + sobreposição escura para legibilidade */
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                url('https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+    background-size: cover;
+    color: #f8f5f2;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
+/* Cabeçalho */
 header {
-    background-image: url('img/chocoback.jpg');
-    background-size: cover;
-    background-position: center;
-    color: white;
-    padding: 2.5rem 1.5rem;
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 2.5rem 1rem 1rem 1rem;
 }
 
-/* Estilizando especificamente o título CacauDelShow */
 header h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 3.5rem;
-    letter-spacing: 2px;
-    margin-bottom: 0rem;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.377); 
+    font-size: 2.5rem;
+    color: #f3e5dc;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 header p {
-    font-size: 1.1rem;
-    font-weight: 300;
-    opacity: 0.9;
+    font-size: 0.95rem;
+    color: #d4c5b9;
+    margin-top: 0.3rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+/* Corpo Principal / Cartão de Login */
 main {
     flex: 1;
-    max-width: 1200px;
-    width: 100%;
-    margin: 2rem auto;
-    padding: 0 1rem;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* Card padrão para o painel e outras telas (ocupa o espaço do container) */
-.card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-/* Card específico para a tela de Login (menor e centralizado) */
-.login-card {
-    max-width: 420px;
-    width: 100%;
-    margin: 2rem auto;
-    padding: 2rem;
-}
-
-h2, h3 {
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-/* Navbar / Abas */
-.admin-nav {
     display: flex;
-    gap: 8px;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 1rem;
-}
-
-.nav-btn {
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    border: none;
-    padding: 0.6rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bolder;
-    transition: all 0.5s;
-    width: auto;
-    margin-bottom: 0.5;
-}
-
-.nav-btn.active, .nav-btn:hover {
-    background-color: var(--primary-color);
-    color: white;
-}
-
-/* Cards de Resumo de Lucro */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.stat-box {
-    background-color: #f4efe6;
-    border-left: 4px solid var(--primary-color);
+    justify-content: center;
+    align-items: center;
     padding: 1rem;
-    border-radius: 4px;
 }
 
-.stat-box h4 {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 0.3rem;
-}
-
-.stat-box p {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
-/* Formulários e Inputs */
-input, select, button {
+.card {
+    background: rgba(255, 255, 255, 0.95); /* Leve transparência elegante */
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
     width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 1rem;
+    max-width: 400px;
+    border: 1px solid rgba(234, 226, 216, 0.5);
+    backdrop-filter: blur(5px);
 }
 
-button {
-    background-color: var(--primary-color);
+.login-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    color: #5c3a21;
+    text-align: center;
+}
+
+/* Formulário */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #5c3a21;
+}
+
+input {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid #d4c5b9;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fff;
+    color: #3b2314;
+}
+
+input:focus {
+    border-color: #5c3a21;
+    box-shadow: 0 0 0 3px rgba(92, 58, 33, 0.15);
+}
+
+button[type="submit"] {
+    background-color: #5c3a21;
+    color: #ffffff;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 0.5rem;
+}
+
+button[type="submit"]:hover {
+    background-color: #432a18;
+}
+
+/* Rodapé */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.8rem;
+    color: #d4c5b9;
+    border-top: 1px solid rgba(234, 226, 216, 0.1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+footer strong {
+    color: #f3e5dc;
+}
+
+/* Estilos gerais para Dashboards */
+.dashboard-body {
+    background: #f8f5f2;
+    color: #3b2314;
+}
+
+.dashboard-header {
+    background-color: #5c3a21;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.dashboard-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: #f3e5dc;
+}
+
+.dashboard-header p {
+    font-size: 0.85rem;
+    color: #d4c5b9;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dashboard-main {
+    padding: 2rem;
+    flex: 1;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.select-input {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid #d4c5b9;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+    color: #3b2314;
+    outline: none;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid #d4c5b9;
+    color: #5c3a21;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.dashboard-header .btn-secondary {
+    border-color: #f3e5dc;
+    color: #f3e5dc;
+}
+
+.dashboard-header .btn-secondary:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+/* Layout da Página do Vendedor */
+.vendor-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.produtos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.produto-card {
+    background: #fff;
+    border: 1px solid #eae2d8;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(92, 58, 33, 0.04);
+}
+
+.produto-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+}
+
+.produto-card h3 {
+    font-size: 1rem;
+    color: #5c3a21;
+    margin-bottom: 0.25rem;
+}
+
+.produto-card .descricao {
+    font-size: 0.8rem;
+    color: #8c6d53;
+    margin-bottom: 0.5rem;
+    flex: 1;
+}
+
+.produto-card .preco {
+    font-weight: 600;
+    color: #5c3a21;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.produto-card .estoque {
+    font-size: 0.75rem;
+    color: #8c6d53;
+    margin-bottom: 0.75rem;
+}
+
+.bag-section {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+}
+
+.bag-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: #5c3a21;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eae2d8;
+    padding-bottom: 0.5rem;
+}
+
+.bag-items {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.empty-bag {
+    color: #8c6d53;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.bag-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed #eae2d8;
+}
+
+.btn-remove {
+    background: #d9534f;
     color: white;
     border: none;
+    border-radius: 4px;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s;
+    font-size: 0.75rem;
 }
 
-button:hover { background-color: #553926; }
-button.danger { background-color: var(--danger-color); }
-button.danger:hover { background-color: #9b1c1c; }
-button.warning { background-color: var(--warning-color); }
-button.warning:hover { background-color: #b45309; }
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-th, td {
-    padding: 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
-th {
-    background-color: #f4efe6;
-    color: var(--primary-color);
-}
-
-.action-btns {
-    display: flex;
-    gap: 5px;
-}
-
-.action-btns button {
-    padding: 0.3rem 0.6rem;
-    margin-bottom: 0;
-    font-size: 0.85rem;
-    width: auto;
-}
-
-footer {
-    background-color: var(--primary-color);
-    color: white;
-    text-align: center;
-    padding: 0.3rem;
-    margin-top: auto;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-footer p {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.bag-total {
+    font-size: 1.1rem;
+    color: #5c3a21;
+    margin-bottom: 1rem;
+    text-align: right;
 }

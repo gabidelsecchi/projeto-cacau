@@ -3,62 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Administrador - Cacau Show</title>
+    <title>Painel do Administrador - CacauDelShow</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="dashboard-body">
 
-    <!-- Proteção de Rota Imediata -->
-    <script>
-        const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-        if (!usuarioLogado || usuarioLogado.tipo !== 'admin') {
-            alert('Acesso negado! Faça login como Administrador.');
-            window.location.href = 'index.html';
-        }
-    </script>
-
-    <header>
-        <h1>Painel de Gestão - Cacau Show</h1>
-        <p>Área do Administrador</p>
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1>CacauDelShow</h1>
+            <p>Painel Administrativo</p>
+        </div>
+        <button id="btn-logout" class="btn-secondary">Sair</button>
     </header>
 
-    <main>
-        <section class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h2>Painel do Administrador</h2>
-                <button id="btn-logout" class="danger" style="width: auto; padding: 0.5rem 1rem;">Sair do Sistema</button>
-            </div>
+    <main class="dashboard-main">
+        <section class="admin-grid">
             
-            <!-- Navbar / Abas do Admin -->
-            <nav class="admin-nav">
-                <button class="nav-btn active" onclick="alternarAbaAdmin('usuarios')">Usuários</button>
-                <button class="nav-btn" onclick="alternarAbaAdmin('estoque')">Estoque</button>
-                <button class="nav-btn" onclick="alternarAbaAdmin('atribuir')">Montar Sacola</button>
-                <button class="nav-btn" onclick="alternarAbaAdmin('sacolas')">Sacolas Ativas</button>
-                <button class="nav-btn" onclick="alternarAbaAdmin('lucros')">Relatório de Lucros</button>
-            </nav>
+            <!-- Card: Gerenciar / Cadastrar Usuários -->
+            <div class="card admin-card">
+                <h2>Cadastrar Novo Usuário</h2>
+                <form id="create-user-form">
+                    <label for="new-email">E-mail:</label>
+                    <input type="email" id="new-email" required placeholder="vendedor@email.com">
+                    
+                    <label for="new-senha">Senha Temporária:</label>
+                    <input type="password" id="new-senha" required placeholder="Mínimo de 6 caracteres">
+                    
+                    <label for="new-nome">Nome Completo:</label>
+                    <input type="text" id="new-nome" required placeholder="Nome do Vendedor">
 
-            <!-- Abas (Conteúdos iguais aos que você já tinha) -->
-            <div id="tab-usuarios" class="admin-tab-content">
-                <!-- Conteúdo de Usuários -->
+                    <label for="new-cargo">Cargo:</label>
+                    <select id="new-cargo" class="select-input">
+                        <option value="vendedor">Vendedor</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                    
+                    <button type="submit" class="btn-primary">Criar Usuário</button>
+                </form>
             </div>
-            <div id="tab-estoque" class="admin-tab-content hidden">
-                <!-- Conteúdo de Estoque -->
+
+            <!-- Card: Atalhos / Estatísticas Rápidas -->
+            <div class="card admin-card">
+                <h2>Gerenciamento do Sistema</h2>
+                <p>Aqui você poderá gerenciar o estoque, cadastrar produtos e acompanhar as vendas dos vendedores.</p>
+                <div class="admin-actions">
+                    <button class="btn-primary" onclick="alert('Módulo de Produtos em breve!')">Gerenciar Produtos e Estoque</button>
+                    <button class="btn-secondary" onclick="alert('Relatórios em breve!')">Ver Relatórios de Vendas</button>
+                </div>
             </div>
-            <div id="tab-atribuir" class="admin-tab-content hidden">
-                <!-- Conteúdo de Atribuir -->
-            </div>
-            <div id="tab-sacolas" class="admin-tab-content hidden">
-                <!-- Conteúdo de Sacolas Ativas -->
-            </div>
-            <div id="tab-lucros" class="admin-tab-content hidden">
-                <!-- Conteúdo de Lucros -->
-            </div>
+
         </section>
     </main>
 
     <footer>
-        <p>&copy; Desenvolvido por <strong>Fernando e Gabriela</strong>. Versão 1.0.0.</p>
+        <p>&copy; Desenvolvido por <strong>Fernando Pereira Nilsen</strong> e <strong>Gabriela Del Secchi</strong></p>
     </footer>
 
     <script type="module" src="admin.js"></script>

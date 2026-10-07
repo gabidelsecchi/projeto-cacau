@@ -1,39 +1,49 @@
-// auth.js
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('login-form');
-    if (!loginForm) return;
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const email = document.getElementById('login-email').value.trim();
-        const senha = document.getElementById('login-senha').value.trim();
+// Substitua com as suas credenciais reais do projeto do Supabase
+const SUPABASE_URL = 'https://keepzepbtsuhaeeospgs.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlZXB6ZXBidHN1aGFlZW9zcGdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5NTY1MjgsImV4cCI6MjEwNjUzMjUyOH0.YnyYI46OWXwSKOQ6GZ8xkNM5rQg8WOPc8XgMCgLhiqQ';
 
-        // Exemplo: Recuperando usuários salvos no localStorage (ou use sua lógica existente)
-        const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-        
-        // Se for o primeiro acesso e não houver usuários cadastrados, crie um admin padrão para teste:
-        if (usuarios.length === 0 && email === 'admin@cacaushow.com' && senha === '123456') {
-            const adminPadrao = { id: 1, nome: 'Administrador', email, senha, tipo: 'admin' };
-            usuarios.push(adminPadrao);
-            localStorage.setItem('usuarios', JSON.stringify(usuarios));
-        }
+const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Buscar o usuário correspondente
-        const usuarioEncontrado = usuarios.find(u => u.email === email && u.senha === senha);
+const loginForm = document.getElementById('login-form');
 
-        if (usuarioEncontrado) {
-            // Salva o usuário logado na sessão do navegador
-            localStorage.setItem('usuarioLogado', JSON.stringify(usuarioEncontrado));
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('login-email').value;
+    const senha = document.getElementById('login-senha').value;
 
-            // Redireciona com base no tipo de perfil
-            if (usuarioEncontrado.tipo === 'admin') {
-                window.location.href = 'admin.html';
-            } else if (usuarioEncontrado.tipo === 'vendedor') {
-                window.location.href = 'vendedor.html';
-            }
+    try {
+        // 1. Faz o login no Supabase Auth
+        const { data: authData, error: authError } = await _supabase.auth.signInWithPassword({
+            email: email,
+            password: senha,
+        });
+
+        if (authError) throw authError;
+
+        const user = authData.user;
+
+        // 2. Busca o cargo do usuário na tabela de perfis personalizada
+        const { data: profileData, error: profileError } = await _supabase
+            .from('perfis')
+            .select('cargo') // ajuste para o nome correto da sua tabela de perfis
+            .eq('id', user.id)
+            .single();
+
+        if (profileError) throw profileError;
+
+        // 3. Redireciona com base no cargo
+        alert('Login realizado com sucesso!');
+        if (profileData.cargo === 'admin') {
+            window.location.href = 'admin.html'; // Página do Administrador
         } else {
-            alert('E-mail ou senha incorretos!');
+            window.location.href = 'vendedor.html'; // Página do Vendedor
         }
-    });
+
+    } catch (error) {
+        alert('Erro ao fazer login: ' + error.message);
+        console.error(error);
+    }
 });
