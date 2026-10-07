@@ -10,20 +10,28 @@ async function checkAuth() {
     const { data: { session } } = await _supabase.auth.getSession();
     
     if (!session) {
+        console.warn("Nenhuma sessão ativa encontrada. Redirecionando para login.");
         window.location.href = 'index.html';
         return;
     }
 
+    console.log("Usuário logado ID:", session.user.id);
+
     // Verifica o cargo na tabela perfis
     const { data: profile, error } = await _supabase
         .from('perfis')
-        .select('cargo')
+        .select('cargo, email, nome')
         .eq('id', session.user.id)
         .single();
 
+    console.log("Dados do perfil retornados:", profile);
+    console.log("Erro retornado (se houver):", error);
+
     if (error || !profile || profile.cargo !== 'admin') {
-        alert('Acesso negado! Área exclusiva para administradores.');
+        alert(`Acesso negado! Cargo encontrado: ${profile ? profile.cargo : 'Nenhum perfil encontrado'}`);
         window.location.href = 'vendedor.html';
+    } else {
+        console.log("Acesso autorizado como Administrador!");
     }
 }
 
