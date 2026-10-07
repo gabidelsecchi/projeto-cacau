@@ -7,28 +7,31 @@ const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // 1. Verificar se o usuário está logado e se é admin ao carregar a página
 async function checkAuth() {
-    const { data: { session } } = await _supabase.auth.getSession();
+    // Pega o usuário atual diretamente da sessão ativa do Supabase
+    const { data: { user }, error: userError } = await _supabase.auth.getUser();
     
-    if (!session) {
-        console.warn("Nenhuma sessão ativa encontrada. Redirecionando para login.");
+    if (userError || !user) {
+        console.warn("Erro ou usuário não autenticado:", userError);
+        alert("Sessão expirada ou usuário não autenticado. Faça login novamente.");
         window.location.href = 'index.html';
         return;
     }
 
-    console.log("Usuário logado ID:", session.user.id);
+    console.log("ID do usuário autenticado no navegador:", user.id);
 
-    // Verifica o cargo na tabela perfis
+    // Busca o cargo na tabela perfis usando o ID exato
     const { data: profile, error } = await _supabase
         .from('perfis')
         .select('cargo, email, nome')
-        .eq('id', session.user.id)
-        .single();
+        .eq('id', user.id)
+        .maybeSingle(); // Usamos maybeSingle para evitar erro caso retorne vazio
 
-    console.log("Dados do perfil retornados:", profile);
-    console.log("Erro retornado (se houver):", error);
+    console.log("Perfil retornado pelo banco:", profile);
+    console.log("Erro do banco (se houver):", error);
 
     if (error || !profile || profile.cargo !== 'admin') {
-        alert(`Acesso negado! Cargo encontrado: ${profile ? profile.cargo : 'Nenhum perfil encontrado'}`);
+        const cargoEncontrado = profile ? profile.cargo : 'Nenhum perfil encontrado';
+        alert(`Acesso negado! Cargo encontrado: ${cargoEncontrado} (ID consultado: ${user.id})`);
         window.location.href = 'vendedor.html';
     } else {
         console.log("Acesso autorizado como Administrador!");
